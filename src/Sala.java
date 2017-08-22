@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Sala {
 	
 	public enum Tile { LIMPO, LIXEIRA, LIXO, PAREDE, RECARGA};
@@ -21,7 +23,28 @@ public class Sala {
 	}
 
 	private void geraLixo() {
-		// TODO Auto-generated method stub
+		double porcentagemLixo = 0.4 + new Random().nextDouble() * 0.45;
+		int lixo = (int) (porcentagemLixo *(campo.length * campo[0].length));
+		
+		int espaçoLivre = campo.length * campo[0].length - totalParedes - totalLixeiras - totalRecargas;
+		if(lixo > espaçoLivre) {
+			lixo = espaçoLivre;
+			porcentagemLixo = lixo/(1.0 * campo.length * campo[0].length);			
+		}
+		
+		System.out.println("Total de lixo :" + lixo + " (" + (int)(porcentagemLixo*100) + "%)");
+		
+		Random valor = new Random();
+		
+		while(lixo > 0) {
+			int x = valor.nextInt(campo.length);
+			int y = valor.nextInt(campo[0].length);
+			
+			if(campo[y][x] == Tile.LIMPO) {
+				campo[y][x] = Tile.LIXO;
+				lixo--;
+			}			
+		}
 		
 	}
 
@@ -52,7 +75,7 @@ public class Sala {
 			}
 		}		
 		System.out.println("Tamanho da sala é " + campo.length + "x" + campo[0].length);
-		System.out.println("Tamanho de espaços: " + campo.length * campo[0].length);
+		System.out.println("Total de espaços: " + campo.length * campo[0].length);
 	}
 	
 }
