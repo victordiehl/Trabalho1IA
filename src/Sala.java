@@ -11,19 +11,20 @@ public class Sala {
     protected Recarga[] recargas;
     
     private int totalParedes = 0;
-    private int totalLixeiras;
-    private int totalRecargas;
+    private int totalLixeiras = 0;
+    private int totalRecargas = 0;
     
-    //PROBLEMA! parametros sobreescrevem o array de Lixeiras e Recargas. Devemos renomear os parametros.
-    public Sala(int tamanho, int lixeiras, int recargas){
-        criaSala(tamanho);
+    private int posicaoParede1, posicaoParede2;
+    
+    public Sala(int tamanhoSala, int quantidadeLixeiras, int quantidadeRecargas){
+        criaSala(tamanhoSala);
         constroiParedes();
-        geraLixeiras(lixeiras);
-        geraRecargas(recargas);
-        geraLixo();
+        geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
+        geraPosicoesParaRecarga(quantidadeRecargas);
+        geraPosicoesComLixo();
     }
 
-    private void geraLixo() {
+    private void geraPosicoesComLixo() {
         double porcentagemLixo = 0.4 + new Random().nextDouble() * 0.45;
         int lixo = (int) (porcentagemLixo *(campo.length * campo[0].length));
         
@@ -45,59 +46,59 @@ public class Sala {
         }
     }
 
-    private void geraRecargas(int recargas) {
+    private void geraPosicoesParaRecarga(int quantidadePosicoesDeRecarga) {
         Random valor = new Random();        
-        while (recargas > 0) {
+        while (quantidadePosicoesDeRecarga > 0) {
             int x = valor.nextInt(campo.length);
             int y = valor.nextInt(campo[0].length);
-            if (dentroDasAreasParaLixeirasRegargas(x, y)) {
+            if (isDentroDasAreasParaLixeirasRegargas(x, y)) {
                 Recarga pontoDeRecarga = new Recarga(x, y);
-                recargas[recargas - 1] = pontoDeRecarga;
-                recargas--;
+                recargas[quantidadePosicoesDeRecarga - 1] = pontoDeRecarga;
+                quantidadePosicoesDeRecarga--;
             }
         }
     }
 
-    private boolean dentroDasAreasParaLixeirasRecargas(int x, int y) {
+    private boolean isDentroDasAreasParaLixeirasRegargas(int x, int y) {
         //p1, p2, e a altura das paredes foram calculadas em 'constroiParedes'
         //Seria interessante move-las como atributos da classe
-        if ((x < p1 || x > p2) && (y > 2 || y < this.campo.length - 2))
+        if ((x < posicaoParede1 || x > posicaoParede2) && (y > 2 || y < this.campo.length - 2))
             return true;
         else
             return false;
     }
     
-    private void geraLixeiras(int lixeiras) {
+    private void geraPosicoesParaDescarregarLixo(int quantidadePosicoesDeLixeira) {
         Random valor = new Random();        
-        while (lixeiras > 0) {
+        while (quantidadePosicoesDeLixeira > 0) {
             int x = valor.nextInt(campo.length);
             int y = valor.nextInt(campo[0].length);
-            if (dentroDasAreasParaLixeirasRegargas(x, y)) {
+            if (isDentroDasAreasParaLixeirasRegargas(x, y)) {
                 Lixeira pontoDeLixeira = new Lixeira(x, y);
-                lixeiras[lixeiras - 1] = pontoDeLixeira;
-                lixeiras--;
+                lixeiras[quantidadePosicoesDeLixeira - 1] = pontoDeLixeira;
+                quantidadePosicoesDeLixeira--;
             }
         }
     }
 
-    private void constroiParedes(int ) {
+    private void constroiParedes() {
         if (campo == null)
             return;
         
         //assumindo por hora que a sala seja sempre quadrada.
         //tambem nao estou me preocupando que a sala seja tao pequena,
         //que as paredes acabem dividindo ela em 2 ou mais salas
-        int p1 = (int) 0.25 * this.campo[0].length;
-        int p2 = (int) 0.75 * this.campo[0].length;
+        posicaoParede1 = (int) 0.25 * this.campo[0].length;
+        posicaoParede2 = (int) 0.75 * this.campo[0].length;
         for (int i = 2; i < campo.length - 2; i++) {
-            campo[i][p1] = Tile.PAREDE;
-            campo[i][p2] = Tile.PAREDE;
+            campo[i][posicaoParede1] = Tile.PAREDE;
+            campo[i][posicaoParede2] = Tile.PAREDE;
             totalParedes++;
         }
-        campo[2][p1 - 1] = Tile.PAREDE;
-        campo[campo.length - 3][p1 - 1] = Tile.PAREDE;
-        campo[2][p2 + 1] = Tile.PAREDE;
-        campo[campo.length - 3][p2 + 1] = Tile.PAREDE;
+        campo[2][posicaoParede1 - 1] = Tile.PAREDE;
+        campo[campo.length - 3][posicaoParede1 - 1] = Tile.PAREDE;
+        campo[2][posicaoParede2 + 1] = Tile.PAREDE;
+        campo[campo.length - 3][posicaoParede2 + 1] = Tile.PAREDE;
         totalParedes += 4;
     }
 
@@ -116,5 +117,4 @@ public class Sala {
         System.out.println("Tamanho da sala eh " + campo.length + "x" + campo[0].length);
         System.out.println("Total de espacos: " + campo.length * campo[0].length);
     }
-    
 }
