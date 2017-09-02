@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Sala {
     
-    public enum Tile { LIMPO, LIXEIRA, LIXO, PAREDE, RECARGA };
+    public enum Tile { LIMPO, LIXEIRA, LIXO, PAREDE, RECARGA, LIMPO_E_VISITADO };
     
     protected Tile[][] campo;
     protected int altura;
@@ -110,9 +110,8 @@ public class Sala {
         this.largura = campo[0].length;
         
         for(int i = 0; i < campo.length; i++) {
-            for(int j = 0; j < campo[i].length ; j++) {
+            for(int j = 0; j < campo[i].length ; j++)
                 campo[i][j] = Tile.LIMPO;
-            }
         }       
         System.out.println("Tamanho da sala eh " + campo.length + "x" + campo[0].length);
         System.out.println("Total de espacos: " + campo.length * campo[0].length);
