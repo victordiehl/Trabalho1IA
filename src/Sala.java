@@ -114,6 +114,32 @@ public class Sala {
                 campo[i][j] = Tile.LIMPO;
         }       
         System.out.println("Tamanho da sala eh " + campo.length + "x" + campo[0].length);
-        System.out.println("Total de espacos: " + campo.length * campo[0].length);
+    }
+    
+    public void limpaPosicaoAtual(int x, int y) {
+    	if (campo[x][y] == Tile.LIXO)
+    		campo[x][y] = Tile.LIMPO_E_VISITADO;
+    }
+    
+    public Ponto buscaLixeiraMaisProxima(int x, int y) {
+    	int menorDistancia = Integer.MAX_VALUE;
+    	Lixeira lixeiraEscolhida = null;
+    	for (int i = 0; i < lixeiras.length; i++) {
+    		int distanciaAtual = Math.abs(lixeiras[i].getX() - x) + Math.abs(lixeiras[i].getY() - y);
+    		if (distanciaAtual < menorDistancia)
+    			lixeiraEscolhida = lixeiras[i];
+    	}
+    	return lixeiraEscolhida;
+    }
+    
+    public Ponto buscaRecargaMaisProxima(int x, int y) {
+    	int menorDistancia = Integer.MAX_VALUE;
+    	Recarga recargaEscolhida = null;
+    	for (int i = 0; i < recargas.length; i++) {
+    		int distanciaAtual = Math.abs(recargas[i].getX() - x) + Math.abs(recargas[i].getY() - y);
+    		if (distanciaAtual < menorDistancia)
+    			recargaEscolhida = recargas[i];
+    	}
+    	return recargaEscolhida;
     }
 }

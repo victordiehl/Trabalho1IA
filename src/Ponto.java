@@ -1,6 +1,11 @@
 
-public abstract class Ponto {
+public class Ponto {
 	private int X, Y;
+	
+	public Ponto(int x, int y) {
+		this.X = x;
+		this.Y = y;
+	}
 
 	public int getX() {
 		return X;
