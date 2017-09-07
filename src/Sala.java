@@ -60,8 +60,6 @@ public class Sala {
     }
 
     private boolean isDentroDasAreasParaLixeirasRegargas(int x, int y) {
-        //p1, p2, e a altura das paredes foram calculadas em 'constroiParedes'
-        //Seria interessante move-las como atributos da classe
         if ((x < posicaoParede1 || x > posicaoParede2) && (y > 2 || y < this.campo.length - 2))
             return true;
         else
@@ -141,5 +139,33 @@ public class Sala {
     			recargaEscolhida = recargas[i];
     	}
     	return recargaEscolhida;
+    }
+
+    public boolean isValido(Ponto ponto) {
+    	if (0 <= ponto.getX() && ponto.getX() < campo.length && 0 <= ponto.getY() && ponto.getY() < campo.length)
+    		return true;
+    	else
+    		return false;
+    }    
+    
+    public boolean isParede(Ponto ponto) {
+    	if (campo[ponto.getX()][ponto.getY()] == Tile.PAREDE)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public boolean isLixeira(Ponto ponto) {
+    	if (campo[ponto.getX()][ponto.getY()] == Tile.LIXEIRA)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public boolean isRecarga(Ponto ponto) {
+    	if (campo[ponto.getX()][ponto.getY()] == Tile.RECARGA)
+    		return true;
+    	else
+    		return false;
     }
 }
