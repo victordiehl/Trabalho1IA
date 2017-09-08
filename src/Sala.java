@@ -186,11 +186,15 @@ public class Sala {
     
     //robo eh passado como parametro ja que a sala desconhece a posicao dele
     public void printSala(Automato robo) {
-//    	Ponto aux = robo.getPosicaoAtual();
-//    	Tile estadoAnterior = campo[aux.getX()][aux.getY()];
+    	int posxRobo = robo.getPosicaoAtual().getX();
+    	int posyRobo = robo.getPosicaoAtual().getY();
     	for (int i = 0; i < campo.length; i++) {
-    		for (int j = 0; j < campo[0].length; j++)
-    			System.out.print(" " + tabelaParaImpressao.get(campo[i][j]) + " ");
+    		for (int j = 0; j < campo[0].length; j++) {
+    			if (i == posyRobo && j == posxRobo)
+    				System.out.print(" R ");
+    			else
+    				System.out.print(" " + tabelaParaImpressao.get(campo[i][j]) + " ");
+    		}
     		System.out.println();
     	}
     }

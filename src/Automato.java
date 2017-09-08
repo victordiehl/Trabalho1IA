@@ -8,7 +8,7 @@ public class Automato {
 	//assumindo que as quantidades de lixo sao sempre iguais e unitarias,
 	//a capacidade de lixo do robo sera um multiplo inteiro de 1
 	private int capacidadeMaximaDeLixo;
-	private int quantidadeLixoAtual;
+	private int quantidadeLixoAtual = 0;
 	
 	//pode ser uma lixeira, um ponto de regarda, ou a ultima celula visitada
 	private Ponto posicaoObjetivo;
@@ -25,10 +25,11 @@ public class Automato {
 		posicaoAtual = new Ponto(0, 0);
 		if (t <= 0)
 			throw new Exception("Reservatorio de lixo (t) precisa ser maior que 0.");
-		if (c <= 0)
-			throw new Exception("Carga maxima (c) precisa ser maior que 0.");
+		if (c < capacidadeMinimaDeBateria)
+			throw new Exception("Carga maxima (c) precisa ser maior que a carga minima.");
 		capacidadeMaximaDeLixo = t;
 		capacidadeMaximaDeBateria = c;
+		quantidadeBateriaAtual = c;
 	}
 	
 	public Ponto getPosicaoAtual() {
@@ -37,12 +38,16 @@ public class Automato {
 	
 	//logica ainda nao testada. Acredito que ajudaria MUITO fazer uma nova maquina de estados
 	public void proximaAcao(Sala sala) {
+		System.out.println("Bateria: " + quantidadeBateriaAtual);
+		System.out.println("Lixo carregado: " + quantidadeLixoAtual);
+		System.out.println("Posicao: x=" + getPosicaoAtual().getY() + " y=" + getPosicaoAtual().getX());
 		if (estadoAtual == Estado.CARREGANDO) {
 			quantidadeBateriaAtual++;
 			if (quantidadeBateriaAtual == capacidadeMaximaDeBateria) {
 				estadoAtual = Estado.ANDANDO;
 				posicaoObjetivo = new Ponto(ultimaPosicaoVisitada.getX(), ultimaPosicaoVisitada.getY());
 			}
+			System.out.println("Estado: carregando");
 		}
 		else if (estadoAtual == Estado.JOGANDO_LIXO_NA_LIXEIRA) {
 			quantidadeLixoAtual--;
@@ -51,6 +56,7 @@ public class Automato {
 				estadoAtual = Estado.ANDANDO;
 				posicaoObjetivo = new Ponto(ultimaPosicaoVisitada.getX(), ultimaPosicaoVisitada.getY());
 			}
+			System.out.println("Estado: jogando lixo na lixeira");
 		}
 		else if (estadoAtual == Estado.ANDANDO) {
 			if (quantidadeBateriaAtual <= capacidadeMinimaDeBateria) {
@@ -63,6 +69,7 @@ public class Automato {
 			}
 			//realiza o movimento efetivo com A*
 			quantidadeBateriaAtual--;
+			System.out.println("Estado: andando");
 		}
 		else if (estadoAtual == Estado.LIMPANDO) {
 			quantidadeLixoAtual++;
@@ -73,6 +80,7 @@ public class Automato {
 			}
 			estadoAtual = Estado.ANDANDO;
 			quantidadeBateriaAtual--;
+			System.out.println("Estado: limpando");
 		}
 	}
 }

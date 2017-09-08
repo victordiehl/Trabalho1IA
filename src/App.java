@@ -11,13 +11,13 @@ public class App {
 	public static void main(String[] args) throws Exception {
 		Sala sala = new Sala(TAMANHO_SALA, QUANTIDADE_LIXEIRAS, QUANTIDADE_PONTOS_RECARGA);
 		Automato robo = new Automato(CAPACIDADE_MAXIMA_LIXO, CARGA_MAXIMA_BATERIA);
-		sala.printSala(robo);
-		
 		
 		//loop infinito, pois ainda pensando sobre a melhor forma para
 		//implementar a condicao de parada
-//		while(true) {
-//			robo.proximaAcao(sala);
-//		}
+		while(true) {
+			sala.printSala(robo);
+			robo.proximaAcao(sala);
+			Thread.sleep(3000);
+		}
 	}
 }
