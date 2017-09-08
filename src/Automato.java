@@ -31,6 +31,10 @@ public class Automato {
 		capacidadeMaximaDeBateria = c;
 	}
 	
+	public Ponto getPosicaoAtual() {
+		return posicaoAtual;
+	}
+	
 	//logica ainda nao testada. Acredito que ajudaria MUITO fazer uma nova maquina de estados
 	public void proximaAcao(Sala sala) {
 		if (estadoAtual == Estado.CARREGANDO) {

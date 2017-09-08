@@ -1,8 +1,10 @@
+import java.util.HashMap;
 import java.util.Random;
 
 public class Sala {
     
     public enum Tile { LIMPO, LIXEIRA, LIXO, PAREDE, RECARGA, LIMPO_E_VISITADO };
+    HashMap<Tile, String> tabelaParaImpressao = new HashMap<>();
     
     protected Tile[][] campo;
     protected int altura;
@@ -17,6 +19,13 @@ public class Sala {
     private int posicaoParede1, posicaoParede2;
     
     public Sala(int tamanhoSala, int quantidadeLixeiras, int quantidadeRecargas){
+    	tabelaParaImpressao.put(Tile.LIMPO, " ");
+    	tabelaParaImpressao.put(Tile.LIXEIRA, "T");
+    	tabelaParaImpressao.put(Tile.LIXO, ".");
+    	tabelaParaImpressao.put(Tile.PAREDE, "/");
+    	tabelaParaImpressao.put(Tile.RECARGA, "+");
+    	tabelaParaImpressao.put(Tile.LIMPO_E_VISITADO, " ");
+    	
         criaSala(tamanhoSala);
         constroiParedes();
         geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
@@ -47,33 +56,37 @@ public class Sala {
     }
 
     private void geraPosicoesParaRecarga(int quantidadePosicoesDeRecarga) {
-        Random valor = new Random();        
+        Random valor = new Random();
+        recargas = new Recarga[quantidadePosicoesDeRecarga];
         while (quantidadePosicoesDeRecarga > 0) {
             int x = valor.nextInt(campo.length);
             int y = valor.nextInt(campo[0].length);
-            if (isDentroDasAreasParaLixeirasRegargas(x, y)) {
-                Recarga pontoDeRecarga = new Recarga(x, y);
+            if (isValido(new Ponto(y, x)) && isDentroDasAreasParaLixeirasRegargas(x, y)) {
+                Recarga pontoDeRecarga = new Recarga(y, x);
                 recargas[quantidadePosicoesDeRecarga - 1] = pontoDeRecarga;
+                campo[y][x] = Tile.RECARGA;
                 quantidadePosicoesDeRecarga--;
             }
         }
     }
 
     private boolean isDentroDasAreasParaLixeirasRegargas(int x, int y) {
-        if ((x < posicaoParede1 || x > posicaoParede2) && (y > 2 || y < this.campo.length - 2))
+        if ((x < posicaoParede1 || posicaoParede2 < x) && (2 < y && y < campo.length - 2))
             return true;
         else
             return false;
     }
     
     private void geraPosicoesParaDescarregarLixo(int quantidadePosicoesDeLixeira) {
-        Random valor = new Random();        
+        Random valor = new Random();
+        lixeiras = new Lixeira[quantidadePosicoesDeLixeira];
         while (quantidadePosicoesDeLixeira > 0) {
             int x = valor.nextInt(campo.length);
             int y = valor.nextInt(campo[0].length);
-            if (isDentroDasAreasParaLixeirasRegargas(x, y)) {
-                Lixeira pontoDeLixeira = new Lixeira(x, y);
+            if (isValido(new Ponto(y, x)) && isDentroDasAreasParaLixeirasRegargas(x, y)) {
+                Lixeira pontoDeLixeira = new Lixeira(y, x);
                 lixeiras[quantidadePosicoesDeLixeira - 1] = pontoDeLixeira;
+                campo[y][x] = Tile.LIXEIRA;
                 quantidadePosicoesDeLixeira--;
             }
         }
@@ -86,8 +99,8 @@ public class Sala {
         //assumindo por hora que a sala seja sempre quadrada.
         //tambem nao estou me preocupando que a sala seja tao pequena,
         //que as paredes acabem dividindo ela em 2 ou mais salas
-        posicaoParede1 = (int) 0.25 * this.campo[0].length;
-        posicaoParede2 = (int) 0.75 * this.campo[0].length;
+        posicaoParede1 = (int) (0.25 * this.campo[0].length);
+        posicaoParede2 = (int) (0.75 * this.campo[0].length) - 1;
         for (int i = 2; i < campo.length - 2; i++) {
             campo[i][posicaoParede1] = Tile.PAREDE;
             campo[i][posicaoParede2] = Tile.PAREDE;
@@ -142,7 +155,9 @@ public class Sala {
     }
 
     public boolean isValido(Ponto ponto) {
-    	if (0 <= ponto.getX() && ponto.getX() < campo.length && 0 <= ponto.getY() && ponto.getY() < campo.length)
+    	if (0 <= ponto.getX() && ponto.getX() < campo.length && 
+    		0 <= ponto.getY() && ponto.getY() < campo.length &&
+    		!isParede(ponto) && !isLixeira(ponto) && !isRecarga(ponto))
     		return true;
     	else
     		return false;
@@ -167,5 +182,16 @@ public class Sala {
     		return true;
     	else
     		return false;
+    }
+    
+    //robo eh passado como parametro ja que a sala desconhece a posicao dele
+    public void printSala(Automato robo) {
+//    	Ponto aux = robo.getPosicaoAtual();
+//    	Tile estadoAnterior = campo[aux.getX()][aux.getY()];
+    	for (int i = 0; i < campo.length; i++) {
+    		for (int j = 0; j < campo[0].length; j++)
+    			System.out.print(" " + tabelaParaImpressao.get(campo[i][j]) + " ");
+    		System.out.println();
+    	}
     }
 }

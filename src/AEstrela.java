@@ -26,7 +26,7 @@ public class AEstrela {
 	public Ponto f() {
 		for (int i = 0; i < solucoesPossiveis.length; i++) {
 			Ponto aux = solucoesPossiveis[i];
-			if (sala.isValido(aux) && !sala.isParede(aux) && !sala.isLixeira(aux) && !sala.isRecarga(aux)) {
+			if (sala.isValido(aux)) {
 				solucoesValidas[quantidadeSolucoes] = solucoesPossiveis[i];
 				solucoesCusto[quantidadeSolucoes] = g() + h(aux);
 				quantidadeSolucoes++;
