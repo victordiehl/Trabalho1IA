@@ -6,18 +6,16 @@ public class App {
 	private static final int QUANTIDADE_PONTOS_RECARGA = 5;
 	
 	private static final int CAPACIDADE_MAXIMA_LIXO = 5;
-	private static final int CARGA_MAXIMA_BATERIA = 25;
+	private static final int CARGA_MAXIMA_BATERIA = Integer.MAX_VALUE;
 	
 	public static void main(String[] args) throws Exception {
 		Sala sala = new Sala(TAMANHO_SALA, QUANTIDADE_LIXEIRAS, QUANTIDADE_PONTOS_RECARGA);
 		Automato robo = new Automato(CAPACIDADE_MAXIMA_LIXO, CARGA_MAXIMA_BATERIA);
 		
-		//loop infinito, pois ainda pensando sobre a melhor forma para
-		//implementar a condicao de parada
-		while(true) {
+		while(!robo.chegouNoDestino()) {
 			sala.printSala(robo);
 			robo.proximaAcao(sala);
-			Thread.sleep(3000);
+			Thread.sleep(500);
 		}
 	}
 }

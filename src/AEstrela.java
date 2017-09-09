@@ -24,6 +24,7 @@ public class AEstrela {
 	}
 	
 	public Ponto f() {
+		quantidadeSolucoes = 0;
 		for (int i = 0; i < solucoesPossiveis.length; i++) {
 			Ponto aux = solucoesPossiveis[i];
 			if (sala.isValido(aux)) {
@@ -45,11 +46,12 @@ public class AEstrela {
 		return solucoesValidas[solucaoAtual];
 	}
 	
+	//custo fixo para ir para qualquer celula vizinha
 	private double g() {
 		return 1.0;
 	}
 	
 	private int h(Ponto posicaoN) {
-		return Math.abs(posicaoN.getX() - objetivo.getX()) + Math.abs(posicaoN.getX() - objetivo.getX());
+		return Math.abs(posicaoN.getX() - objetivo.getX()) + Math.abs(posicaoN.getY() - objetivo.getY());
 	}
 }

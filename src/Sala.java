@@ -19,7 +19,7 @@ public class Sala {
     private int posicaoParede1, posicaoParede2;
     
     public Sala(int tamanhoSala, int quantidadeLixeiras, int quantidadeRecargas){
-    	tabelaParaImpressao.put(Tile.LIMPO, " ");
+    	tabelaParaImpressao.put(Tile.LIMPO, "*");
     	tabelaParaImpressao.put(Tile.LIXEIRA, "T");
     	tabelaParaImpressao.put(Tile.LIXO, ".");
     	tabelaParaImpressao.put(Tile.PAREDE, "/");
@@ -27,10 +27,10 @@ public class Sala {
     	tabelaParaImpressao.put(Tile.LIMPO_E_VISITADO, " ");
     	
         criaSala(tamanhoSala);
-        constroiParedes();
-        geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
-        geraPosicoesParaRecarga(quantidadeRecargas);
-        geraPosicoesComLixo();
+        constroiParedesDeTeste2();
+        //geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
+        //geraPosicoesParaRecarga(quantidadeRecargas);
+        //geraPosicoesComLixo();
     }
 
     private void geraPosicoesComLixo() {
@@ -113,6 +113,35 @@ public class Sala {
         totalParedes += 4;
     }
 
+    //tentar buscar a posicao 11x11 (corner oposto da sala, com 2 paredes em zig-zag)
+    private void constroiParedesDeTeste1() {
+        if (campo == null)
+            return;
+        
+        posicaoParede1 = (int) (0.3 * this.campo[0].length);
+        posicaoParede2 = (int) (0.6 * this.campo[0].length);
+        for (int i = 0; i < campo.length - 2; i++) {
+            campo[i][posicaoParede1] = Tile.PAREDE;
+            totalParedes++;
+        }
+        for (int i = 2; i < campo.length; i++) {
+            campo[i][posicaoParede2] = Tile.PAREDE;
+            totalParedes++;
+        }
+    }
+    
+    //tentar buscar a posicao 5x5 (imediatamente atras da parede)
+    private void constroiParedesDeTeste2() {
+        if (campo == null)
+            return;
+        
+        posicaoParede1 = (int) (0.4 * this.campo[0].length);
+        for (int i = 2; i < campo.length - 2; i++) {
+            campo[i][posicaoParede1] = Tile.PAREDE;
+            totalParedes++;
+        }
+    }    
+    
     private void criaSala(int tamanho) {
         if(tamanho < 12) 
             tamanho = 12;
@@ -164,21 +193,21 @@ public class Sala {
     }    
     
     public boolean isParede(Ponto ponto) {
-    	if (campo[ponto.getX()][ponto.getY()] == Tile.PAREDE)
+    	if (campo[ponto.getY()][ponto.getX()] == Tile.PAREDE)
     		return true;
     	else
     		return false;
     }
     
     public boolean isLixeira(Ponto ponto) {
-    	if (campo[ponto.getX()][ponto.getY()] == Tile.LIXEIRA)
+    	if (campo[ponto.getY()][ponto.getX()] == Tile.LIXEIRA)
     		return true;
     	else
     		return false;
     }
     
     public boolean isRecarga(Ponto ponto) {
-    	if (campo[ponto.getX()][ponto.getY()] == Tile.RECARGA)
+    	if (campo[ponto.getY()][ponto.getX()] == Tile.RECARGA)
     		return true;
     	else
     		return false;

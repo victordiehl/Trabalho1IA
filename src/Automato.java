@@ -14,6 +14,7 @@ public class Automato {
 	private Ponto posicaoObjetivo;
 	private Ponto ultimaPosicaoVisitada;
 	private Ponto posicaoAtual;
+	private AEstrela aEstrela;
 	
 	//para simplificar, assumimos que a bateria nao cai abaixo da capacidade minima
 	private int capacidadeMinimaDeBateria = 0;
@@ -23,6 +24,7 @@ public class Automato {
 	public Automato(int t, int c) throws Exception {
 		estadoAtual = Estado.ANDANDO;
 		posicaoAtual = new Ponto(0, 0);
+		posicaoObjetivo = new Ponto(5, 5);
 		if (t <= 0)
 			throw new Exception("Reservatorio de lixo (t) precisa ser maior que 0.");
 		if (c < capacidadeMinimaDeBateria)
@@ -34,6 +36,11 @@ public class Automato {
 	
 	public Ponto getPosicaoAtual() {
 		return posicaoAtual;
+	}
+	
+	public boolean chegouNoDestino() {
+		return posicaoAtual.getX() == posicaoObjetivo.getX() &&
+			   posicaoAtual.getY() == posicaoObjetivo.getY();
 	}
 	
 	//logica ainda nao testada. Acredito que ajudaria MUITO fazer uma nova maquina de estados
@@ -68,6 +75,9 @@ public class Automato {
 				posicaoObjetivo = sala.buscaLixeiraMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
 			}
 			//realiza o movimento efetivo com A*
+			aEstrela = new AEstrela(posicaoAtual, posicaoObjetivo, sala);
+			posicaoAtual = aEstrela.f();
+			
 			quantidadeBateriaAtual--;
 			System.out.println("Estado: andando");
 		}
@@ -82,5 +92,6 @@ public class Automato {
 			quantidadeBateriaAtual--;
 			System.out.println("Estado: limpando");
 		}
+		System.out.println();
 	}
 }
