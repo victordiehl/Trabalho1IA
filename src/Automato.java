@@ -24,7 +24,8 @@ public class Automato {
 	public Automato(int t, int c) throws Exception {
 		estadoAtual = Estado.ANDANDO;
 		posicaoAtual = new Ponto(0, 0);
-		posicaoObjetivo = new Ponto(5, 5);
+		posicaoObjetivo = new Ponto(9, 8);
+		
 		if (t <= 0)
 			throw new Exception("Reservatorio de lixo (t) precisa ser maior que 0.");
 		if (c < capacidadeMinimaDeBateria)
@@ -32,6 +33,8 @@ public class Automato {
 		capacidadeMaximaDeLixo = t;
 		capacidadeMaximaDeBateria = c;
 		quantidadeBateriaAtual = c;
+		
+		aEstrela = new AEstrela();
 	}
 	
 	public Ponto getPosicaoAtual() {
@@ -75,8 +78,10 @@ public class Automato {
 				posicaoObjetivo = sala.buscaLixeiraMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
 			}
 			//realiza o movimento efetivo com A*
-			aEstrela = new AEstrela(posicaoAtual, posicaoObjetivo, sala);
-			posicaoAtual = aEstrela.f();
+			aEstrela.setOrigem(posicaoAtual);
+			aEstrela.setObjetivo(posicaoObjetivo);
+			sala.limpaPosicaoAtual(posicaoAtual.getX(), posicaoAtual.getY());
+			posicaoAtual = aEstrela.f(sala);
 			
 			quantidadeBateriaAtual--;
 			System.out.println("Estado: andando");

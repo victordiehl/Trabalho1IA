@@ -27,7 +27,7 @@ public class Sala {
     	tabelaParaImpressao.put(Tile.LIMPO_E_VISITADO, " ");
     	
         criaSala(tamanhoSala);
-        constroiParedesDeTeste2();
+        constroiParedes();
         //geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
         //geraPosicoesParaRecarga(quantidadeRecargas);
         //geraPosicoesComLixo();
@@ -157,8 +157,8 @@ public class Sala {
     }
     
     public void limpaPosicaoAtual(int x, int y) {
-    	if (campo[x][y] == Tile.LIXO)
-    		campo[x][y] = Tile.LIMPO_E_VISITADO;
+    	if (campo[y][x] == Tile.LIMPO)
+    		campo[y][x] = Tile.LIMPO_E_VISITADO;
     }
     
     public Ponto buscaLixeiraMaisProxima(int x, int y) {

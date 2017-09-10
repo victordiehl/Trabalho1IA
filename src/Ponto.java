@@ -54,4 +54,9 @@ public class Ponto {
 	public Ponto inferiorDireito() {
 		return new Ponto(this.X + 1, this.Y + 1);
 	}
+	
+	@Override
+	public boolean equals(Object p) {
+		return this.X == ((Ponto)p).getX() && this.Y == ((Ponto)p).getY();
+	}
 }

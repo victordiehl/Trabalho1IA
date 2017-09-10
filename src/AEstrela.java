@@ -1,18 +1,24 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class AEstrela {
 
 	Ponto origem, objetivo;
-	Sala sala;
 	Ponto[] solucoesPossiveis = new Ponto[8];
 	Ponto[] solucoesValidas = new Ponto[8];
 	double[] solucoesCusto = new double[8];
 	int quantidadeSolucoes = 0;
+	Deque<Ponto> caminhoPercorrido = new ArrayDeque<Ponto>();
 	
-	public AEstrela(Ponto origem, Ponto objetivo, Sala sala) {
+	public void setOrigem(Ponto origem) {
 		this.origem = origem;
+	}
+	
+	public void setObjetivo(Ponto objetivo) {
 		this.objetivo = objetivo;
-		this.sala = sala;
-		
+	}
+	
+	private void geraSolucoesPossiveis() {
 		solucoesPossiveis[0] = origem.superiorEsquerdo();
 		solucoesPossiveis[1] = origem.superior();
 		solucoesPossiveis[2] = origem.superiorDireito();
@@ -23,11 +29,13 @@ public class AEstrela {
 		solucoesPossiveis[7] = origem.inferiorDireito();
 	}
 	
-	public Ponto f() {
+	public Ponto f(Sala sala) {
+		geraSolucoesPossiveis();
+		
 		quantidadeSolucoes = 0;
 		for (int i = 0; i < solucoesPossiveis.length; i++) {
 			Ponto aux = solucoesPossiveis[i];
-			if (sala.isValido(aux)) {
+			if (sala.isValido(aux) && !caminhoPercorrido.contains(aux)) {
 				solucoesValidas[quantidadeSolucoes] = solucoesPossiveis[i];
 				solucoesCusto[quantidadeSolucoes] = g() + h(aux);
 				quantidadeSolucoes++;
@@ -43,6 +51,7 @@ public class AEstrela {
 				solucaoAtual = i;
 			}
 		}
+		caminhoPercorrido.push(solucoesValidas[solucaoAtual]);
 		return solucoesValidas[solucaoAtual];
 	}
 	
