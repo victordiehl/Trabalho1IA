@@ -12,7 +12,7 @@ public class App {
 		Sala sala = new Sala(TAMANHO_SALA, QUANTIDADE_LIXEIRAS, QUANTIDADE_PONTOS_RECARGA);
 		Automato robo = new Automato(CAPACIDADE_MAXIMA_LIXO, CARGA_MAXIMA_BATERIA);
 		
-		while(!robo.chegouNoDestino()) {
+		while(true) {
 			sala.printSala(robo);
 			robo.proximaAcao(sala);
 			Thread.sleep(500);

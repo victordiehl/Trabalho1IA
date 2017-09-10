@@ -35,7 +35,7 @@ public class AEstrela {
 		quantidadeSolucoes = 0;
 		for (int i = 0; i < solucoesPossiveis.length; i++) {
 			Ponto aux = solucoesPossiveis[i];
-			if (sala.isValido(aux) && !caminhoPercorrido.contains(aux)) {
+			if (sala.isPontoValido(aux) && !caminhoPercorrido.contains(aux)) {
 				solucoesValidas[quantidadeSolucoes] = solucoesPossiveis[i];
 				solucoesCusto[quantidadeSolucoes] = g() + h(aux);
 				quantidadeSolucoes++;
@@ -53,6 +53,10 @@ public class AEstrela {
 		}
 		caminhoPercorrido.push(solucoesValidas[solucaoAtual]);
 		return solucoesValidas[solucaoAtual];
+	}
+	
+	public void limpaCaminhoPercorrido() {
+		caminhoPercorrido.clear();
 	}
 	
 	//custo fixo para ir para qualquer celula vizinha

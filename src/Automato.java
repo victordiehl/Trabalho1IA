@@ -24,7 +24,6 @@ public class Automato {
 	public Automato(int t, int c) throws Exception {
 		estadoAtual = Estado.ANDANDO;
 		posicaoAtual = new Ponto(0, 0);
-		posicaoObjetivo = new Ponto(9, 8);
 		
 		if (t <= 0)
 			throw new Exception("Reservatorio de lixo (t) precisa ser maior que 0.");
@@ -39,11 +38,6 @@ public class Automato {
 	
 	public Ponto getPosicaoAtual() {
 		return posicaoAtual;
-	}
-	
-	public boolean chegouNoDestino() {
-		return posicaoAtual.getX() == posicaoObjetivo.getX() &&
-			   posicaoAtual.getY() == posicaoObjetivo.getY();
 	}
 	
 	//logica ainda nao testada. Acredito que ajudaria MUITO fazer uma nova maquina de estados
@@ -77,11 +71,19 @@ public class Automato {
 				ultimaPosicaoVisitada = new Ponto(posicaoAtual.getX(), posicaoAtual.getY());
 				posicaoObjetivo = sala.buscaLixeiraMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
 			}
+			
 			//realiza o movimento efetivo com A*
+			if (posicaoObjetivo == null)
+				posicaoObjetivo = sala.proximaPosicaoParaLimpeza(posicaoAtual);
+			
 			aEstrela.setOrigem(posicaoAtual);
 			aEstrela.setObjetivo(posicaoObjetivo);
-			sala.limpaPosicaoAtual(posicaoAtual.getX(), posicaoAtual.getY());
 			posicaoAtual = aEstrela.f(sala);
+			if (posicaoAtual.equals(posicaoObjetivo)) {
+				sala.limpaPosicaoAtual(posicaoAtual.getX(), posicaoAtual.getY());
+				aEstrela.limpaCaminhoPercorrido();
+				posicaoObjetivo = null;
+			}
 			
 			quantidadeBateriaAtual--;
 			System.out.println("Estado: andando");

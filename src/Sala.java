@@ -15,6 +15,7 @@ public class Sala {
     private int totalParedes = 0;
     private int totalLixeiras = 0;
     private int totalRecargas = 0;
+    private boolean moverParaDireita = true;
     
     private int posicaoParede1, posicaoParede2;
     
@@ -61,7 +62,7 @@ public class Sala {
         while (quantidadePosicoesDeRecarga > 0) {
             int x = valor.nextInt(campo.length);
             int y = valor.nextInt(campo[0].length);
-            if (isValido(new Ponto(y, x)) && isDentroDasAreasParaLixeirasRegargas(x, y)) {
+            if (isPontoValido(new Ponto(y, x)) && isDentroDasAreasParaLixeirasRegargas(x, y)) {
                 Recarga pontoDeRecarga = new Recarga(y, x);
                 recargas[quantidadePosicoesDeRecarga - 1] = pontoDeRecarga;
                 campo[y][x] = Tile.RECARGA;
@@ -83,7 +84,7 @@ public class Sala {
         while (quantidadePosicoesDeLixeira > 0) {
             int x = valor.nextInt(campo.length);
             int y = valor.nextInt(campo[0].length);
-            if (isValido(new Ponto(y, x)) && isDentroDasAreasParaLixeirasRegargas(x, y)) {
+            if (isPontoValido(new Ponto(y, x)) && isDentroDasAreasParaLixeirasRegargas(x, y)) {
                 Lixeira pontoDeLixeira = new Lixeira(y, x);
                 lixeiras[quantidadePosicoesDeLixeira - 1] = pontoDeLixeira;
                 campo[y][x] = Tile.LIXEIRA;
@@ -102,14 +103,14 @@ public class Sala {
         posicaoParede1 = (int) (0.25 * this.campo[0].length);
         posicaoParede2 = (int) (0.75 * this.campo[0].length) - 1;
         for (int i = 2; i < campo.length - 2; i++) {
-            campo[i][posicaoParede1] = Tile.PAREDE;
-            campo[i][posicaoParede2] = Tile.PAREDE;
-            totalParedes++;
+            campo[posicaoParede1][i] = Tile.PAREDE;
+            campo[posicaoParede2][i] = Tile.PAREDE;
+            totalParedes += 2;
         }
-        campo[2][posicaoParede1 - 1] = Tile.PAREDE;
-        campo[campo.length - 3][posicaoParede1 - 1] = Tile.PAREDE;
-        campo[2][posicaoParede2 + 1] = Tile.PAREDE;
-        campo[campo.length - 3][posicaoParede2 + 1] = Tile.PAREDE;
+        campo[posicaoParede1 - 1][2] = Tile.PAREDE;
+        campo[posicaoParede1 - 1][campo.length - 3] = Tile.PAREDE;
+        campo[posicaoParede2 + 1][2] = Tile.PAREDE;
+        campo[posicaoParede2 + 1][campo.length - 3] = Tile.PAREDE;
         totalParedes += 4;
     }
 
@@ -182,8 +183,28 @@ public class Sala {
     	}
     	return recargaEscolhida;
     }
+    
+    public Ponto proximaPosicaoParaLimpeza(Ponto posAtual) {
+    	Ponto aux = posAtual;
+    	do {
+    		if (moverParaDireita)
+    			aux = aux.direito();
+    		else
+    			aux = aux.esquerdo();
+    		
+    		if (aux.getY() >= largura) {
+    			aux = aux.inferiorEsquerdo();
+    			moverParaDireita = false;
+    		}
+    		else if (aux.getY() < 0) {
+    			aux = aux.inferiorDireito();
+    			moverParaDireita = true;
+    		}
+    	} while(!isPontoValido(aux));
+    	return aux;
+    }
 
-    public boolean isValido(Ponto ponto) {
+    public boolean isPontoValido(Ponto ponto) {
     	if (0 <= ponto.getX() && ponto.getX() < campo.length && 
     		0 <= ponto.getY() && ponto.getY() < campo.length &&
     		!isParede(ponto) && !isLixeira(ponto) && !isRecarga(ponto))
@@ -219,10 +240,10 @@ public class Sala {
     	int posyRobo = robo.getPosicaoAtual().getY();
     	for (int i = 0; i < campo.length; i++) {
     		for (int j = 0; j < campo[0].length; j++) {
-    			if (i == posyRobo && j == posxRobo)
+    			if (j == posyRobo && i == posxRobo)
     				System.out.print(" R ");
     			else
-    				System.out.print(" " + tabelaParaImpressao.get(campo[i][j]) + " ");
+    				System.out.print(" " + tabelaParaImpressao.get(campo[j][i]) + " ");
     		}
     		System.out.println();
     	}
