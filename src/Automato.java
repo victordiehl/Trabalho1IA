@@ -64,14 +64,18 @@ public class Automato {
 			System.out.println("Estado: jogando lixo na lixeira");
 		}
 		else if (estadoAtual == Estado.ANDANDO) {
+			System.out.println("Estado: andando");
+			
 			if (quantidadeBateriaAtual <= capacidadeMinimaDeBateria) {
 				ultimaPosicaoVisitada = new Ponto(posicaoAtual.getX(), posicaoAtual.getY());
 				posicaoObjetivo = sala.buscaRecargaMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
 			}
 			
 			if (sala.isPosicaoAtualSuja(posicaoAtual.getX(), posicaoAtual.getY()) &&
-				quantidadeLixoAtual < capacidadeMaximaDeLixo)
+				quantidadeLixoAtual < capacidadeMaximaDeLixo && 
+				ultimaPosicaoVisitada == null && posicaoObjetivo == null) {
 				estadoAtual = Estado.LIMPANDO;
+			}
 			else {
 				if (quantidadeLixoAtual == capacidadeMaximaDeLixo && sala.temLixeiraComoVizinho(posicaoAtual)) {
 					estadoAtual = Estado.JOGANDO_LIXO_NA_LIXEIRA;
@@ -86,13 +90,15 @@ public class Automato {
 				aEstrela.setObjetivo(posicaoObjetivo);
 				posicaoAtual = aEstrela.f(sala);
 				if (posicaoAtual.equals(posicaoObjetivo)) {
+					if (ultimaPosicaoVisitada != null && posicaoObjetivo.equals(ultimaPosicaoVisitada))
+						ultimaPosicaoVisitada = null;
+					
 					aEstrela.limpaCaminhoPercorrido();
 					posicaoObjetivo = null;
 				}
 			}
 			
 			quantidadeBateriaAtual--;
-			System.out.println("Estado: andando");
 		}
 		else if (estadoAtual == Estado.LIMPANDO) {
 			quantidadeLixoAtual++;

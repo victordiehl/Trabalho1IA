@@ -15,7 +15,7 @@ public class App {
 		while(true) {
 			sala.printSala(robo);
 			robo.proximaAcao(sala);
-			Thread.sleep(500);
+			Thread.sleep(200);
 		}
 	}
 }

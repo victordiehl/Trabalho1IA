@@ -57,6 +57,6 @@ public class Ponto {
 	
 	@Override
 	public boolean equals(Object p) {
-		return this.X == ((Ponto)p).getX() && this.Y == ((Ponto)p).getY();
+		return p != null && this.X == ((Ponto)p).getX() && this.Y == ((Ponto)p).getY();
 	}
 }
