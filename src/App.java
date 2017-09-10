@@ -2,7 +2,7 @@
 public class App {
 	
 	private static final int TAMANHO_SALA = 12;
-	private static final int QUANTIDADE_LIXEIRAS = 5;
+	private static final int QUANTIDADE_LIXEIRAS = 1;
 	private static final int QUANTIDADE_PONTOS_RECARGA = 5;
 	
 	private static final int CAPACIDADE_MAXIMA_LIXO = 5;

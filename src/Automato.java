@@ -43,7 +43,7 @@ public class Automato {
 	//logica ainda nao testada. Acredito que ajudaria MUITO fazer uma nova maquina de estados
 	public void proximaAcao(Sala sala) {
 		System.out.println("Bateria: " + quantidadeBateriaAtual);
-		System.out.println("Lixo carregado: " + quantidadeLixoAtual);
+		System.out.println("Lixo carregado: " + quantidadeLixoAtual + " de " + capacidadeMaximaDeLixo);
 		System.out.println("Posicao: x=" + getPosicaoAtual().getY() + " y=" + getPosicaoAtual().getX());
 		if (estadoAtual == Estado.CARREGANDO) {
 			quantidadeBateriaAtual++;
@@ -54,12 +54,13 @@ public class Automato {
 			System.out.println("Estado: carregando");
 		}
 		else if (estadoAtual == Estado.JOGANDO_LIXO_NA_LIXEIRA) {
-			quantidadeLixoAtual--;
+			quantidadeLixoAtual = 0;
 			quantidadeBateriaAtual--;
-			if (quantidadeLixoAtual == 0 || quantidadeBateriaAtual <= capacidadeMinimaDeBateria) {
-				estadoAtual = Estado.ANDANDO;
-				posicaoObjetivo = new Ponto(ultimaPosicaoVisitada.getX(), ultimaPosicaoVisitada.getY());
-			}
+			estadoAtual = Estado.ANDANDO;
+			
+			aEstrela.limpaCaminhoPercorrido();
+			posicaoObjetivo = ultimaPosicaoVisitada;
+			
 			System.out.println("Estado: jogando lixo na lixeira");
 		}
 		else if (estadoAtual == Estado.ANDANDO) {
@@ -67,22 +68,27 @@ public class Automato {
 				ultimaPosicaoVisitada = new Ponto(posicaoAtual.getX(), posicaoAtual.getY());
 				posicaoObjetivo = sala.buscaRecargaMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
 			}
-			else if (quantidadeLixoAtual == capacidadeMaximaDeLixo) {
-				ultimaPosicaoVisitada = new Ponto(posicaoAtual.getX(), posicaoAtual.getY());
-				posicaoObjetivo = sala.buscaLixeiraMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
-			}
 			
-			//realiza o movimento efetivo com A*
-			if (posicaoObjetivo == null)
-				posicaoObjetivo = sala.proximaPosicaoParaLimpeza(posicaoAtual);
-			
-			aEstrela.setOrigem(posicaoAtual);
-			aEstrela.setObjetivo(posicaoObjetivo);
-			posicaoAtual = aEstrela.f(sala);
-			if (posicaoAtual.equals(posicaoObjetivo)) {
-				sala.limpaPosicaoAtual(posicaoAtual.getX(), posicaoAtual.getY());
-				aEstrela.limpaCaminhoPercorrido();
-				posicaoObjetivo = null;
+			if (sala.isPosicaoAtualSuja(posicaoAtual.getX(), posicaoAtual.getY()) &&
+				quantidadeLixoAtual < capacidadeMaximaDeLixo)
+				estadoAtual = Estado.LIMPANDO;
+			else {
+				if (quantidadeLixoAtual == capacidadeMaximaDeLixo && sala.temLixeiraComoVizinho(posicaoAtual)) {
+					estadoAtual = Estado.JOGANDO_LIXO_NA_LIXEIRA;
+					return;
+				}
+				
+				//realiza o movimento efetivo com A*
+				if (posicaoObjetivo == null)
+					posicaoObjetivo = sala.proximaPosicaoParaLimpeza(posicaoAtual);
+				
+				aEstrela.setOrigem(posicaoAtual);
+				aEstrela.setObjetivo(posicaoObjetivo);
+				posicaoAtual = aEstrela.f(sala);
+				if (posicaoAtual.equals(posicaoObjetivo)) {
+					aEstrela.limpaCaminhoPercorrido();
+					posicaoObjetivo = null;
+				}
 			}
 			
 			quantidadeBateriaAtual--;

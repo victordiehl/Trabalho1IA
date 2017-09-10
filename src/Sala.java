@@ -20,7 +20,7 @@ public class Sala {
     private int posicaoParede1, posicaoParede2;
     
     public Sala(int tamanhoSala, int quantidadeLixeiras, int quantidadeRecargas){
-    	tabelaParaImpressao.put(Tile.LIMPO, "*");
+    	tabelaParaImpressao.put(Tile.LIMPO, " ");
     	tabelaParaImpressao.put(Tile.LIXEIRA, "T");
     	tabelaParaImpressao.put(Tile.LIXO, ".");
     	tabelaParaImpressao.put(Tile.PAREDE, "/");
@@ -29,9 +29,22 @@ public class Sala {
     	
         criaSala(tamanhoSala);
         constroiParedes();
-        //geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
+        geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
         //geraPosicoesParaRecarga(quantidadeRecargas);
-        //geraPosicoesComLixo();
+        geraPosicoesComLixo();
+    }
+    
+    public Ponto[] getVizinhos(Ponto pos) {
+    	Ponto[] vizinhos = new Ponto[8];
+    	vizinhos[0] = pos.superiorEsquerdo();
+    	vizinhos[1] = pos.superior();
+		vizinhos[2] = pos.superiorDireito();
+		vizinhos[3] = pos.esquerdo();
+		vizinhos[4] = pos.direito();
+		vizinhos[5] = pos.inferiorEsquerdo();
+		vizinhos[6] = pos.inferior();
+		vizinhos[7] = pos.inferiorDireito();
+		return vizinhos;
     }
 
     private void geraPosicoesComLixo() {
@@ -55,6 +68,18 @@ public class Sala {
             }           
         }
     }
+    
+    public boolean temLixeiraComoVizinho(Ponto pos) {
+    	Ponto[] vizinhos = getVizinhos(pos);
+    	for (int i = 0; i < vizinhos.length; i++) {
+    		Ponto v = vizinhos[i];
+    		if (0 <= v.getX() && v.getX() < campo.length &&
+		    	0 <= v.getY() && v.getY() < campo.length &&
+		    	isLixeira(v))
+    			return true;
+    	}
+    	return false;
+    }
 
     private void geraPosicoesParaRecarga(int quantidadePosicoesDeRecarga) {
         Random valor = new Random();
@@ -62,7 +87,7 @@ public class Sala {
         while (quantidadePosicoesDeRecarga > 0) {
             int x = valor.nextInt(campo.length);
             int y = valor.nextInt(campo[0].length);
-            if (isPontoValido(new Ponto(y, x)) && isDentroDasAreasParaLixeirasRegargas(x, y)) {
+            if (isPontoValido(new Ponto(x, y)) && isDentroDasAreasParaLixeirasRegargas(y, x)) {
                 Recarga pontoDeRecarga = new Recarga(y, x);
                 recargas[quantidadePosicoesDeRecarga - 1] = pontoDeRecarga;
                 campo[y][x] = Tile.RECARGA;
@@ -84,8 +109,8 @@ public class Sala {
         while (quantidadePosicoesDeLixeira > 0) {
             int x = valor.nextInt(campo.length);
             int y = valor.nextInt(campo[0].length);
-            if (isPontoValido(new Ponto(y, x)) && isDentroDasAreasParaLixeirasRegargas(x, y)) {
-                Lixeira pontoDeLixeira = new Lixeira(y, x);
+            if (isPontoValido(new Ponto(x, y)) && isDentroDasAreasParaLixeirasRegargas(y, x)) {
+                Lixeira pontoDeLixeira = new Lixeira(x, y);
                 lixeiras[quantidadePosicoesDeLixeira - 1] = pontoDeLixeira;
                 campo[y][x] = Tile.LIXEIRA;
                 quantidadePosicoesDeLixeira--;
@@ -157,8 +182,15 @@ public class Sala {
         System.out.println("Tamanho da sala eh " + campo.length + "x" + campo[0].length);
     }
     
+    public boolean isPosicaoAtualSuja(int x, int y) {
+    	if (campo[y][x] == Tile.LIXO)
+    		return true;
+    	else
+    		return false;
+    }
+    
     public void limpaPosicaoAtual(int x, int y) {
-    	if (campo[y][x] == Tile.LIMPO)
+    	if (campo[y][x] == Tile.LIXO)
     		campo[y][x] = Tile.LIMPO_E_VISITADO;
     }
     

@@ -18,19 +18,8 @@ public class AEstrela {
 		this.objetivo = objetivo;
 	}
 	
-	private void geraSolucoesPossiveis() {
-		solucoesPossiveis[0] = origem.superiorEsquerdo();
-		solucoesPossiveis[1] = origem.superior();
-		solucoesPossiveis[2] = origem.superiorDireito();
-		solucoesPossiveis[3] = origem.esquerdo();
-		solucoesPossiveis[4] = origem.direito();
-		solucoesPossiveis[5] = origem.inferiorEsquerdo();
-		solucoesPossiveis[6] = origem.inferior();
-		solucoesPossiveis[7] = origem.inferiorDireito();
-	}
-	
 	public Ponto f(Sala sala) {
-		geraSolucoesPossiveis();
+		solucoesPossiveis = sala.getVizinhos(origem);
 		
 		quantidadeSolucoes = 0;
 		for (int i = 0; i < solucoesPossiveis.length; i++) {
