@@ -46,11 +46,13 @@ public class Automato {
 		System.out.println("Lixo carregado: " + quantidadeLixoAtual + " de " + capacidadeMaximaDeLixo);
 		System.out.println("Posicao: x=" + getPosicaoAtual().getY() + " y=" + getPosicaoAtual().getX());
 		if (estadoAtual == Estado.CARREGANDO) {
-			quantidadeBateriaAtual++;
-			if (quantidadeBateriaAtual == capacidadeMaximaDeBateria) {
-				estadoAtual = Estado.ANDANDO;
-				posicaoObjetivo = new Ponto(ultimaPosicaoVisitada.getX(), ultimaPosicaoVisitada.getY());
-			}
+			//baterias de He-C: carregam em 1s
+			quantidadeBateriaAtual = capacidadeMaximaDeBateria;			
+			estadoAtual = Estado.ANDANDO;
+			
+			aEstrela.limpaCaminhoPercorrido();
+			posicaoObjetivo = ultimaPosicaoVisitada;
+
 			System.out.println("Estado: carregando");
 		}
 		else if (estadoAtual == Estado.JOGANDO_LIXO_NA_LIXEIRA) {
@@ -66,7 +68,7 @@ public class Automato {
 		else if (estadoAtual == Estado.ANDANDO) {
 			System.out.println("Estado: andando");
 			
-			if (quantidadeBateriaAtual <= capacidadeMinimaDeBateria) {
+			if (quantidadeBateriaAtual <= capacidadeMinimaDeBateria && ultimaPosicaoVisitada == null) {
 				ultimaPosicaoVisitada = new Ponto(posicaoAtual.getX(), posicaoAtual.getY());
 				posicaoObjetivo = sala.buscaRecargaMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
 			}
@@ -79,6 +81,10 @@ public class Automato {
 			else {
 				if (quantidadeLixoAtual == capacidadeMaximaDeLixo && sala.temLixeiraComoVizinho(posicaoAtual)) {
 					estadoAtual = Estado.JOGANDO_LIXO_NA_LIXEIRA;
+					return;
+				}
+				if (quantidadeBateriaAtual <= capacidadeMinimaDeBateria && sala.temRecargaComoVizinho(posicaoAtual)) {
+					estadoAtual = Estado.CARREGANDO;
 					return;
 				}
 				
@@ -112,5 +118,6 @@ public class Automato {
 			System.out.println("Estado: limpando");
 		}
 		System.out.println();
+		sala.aes = aEstrela;
 	}
 }

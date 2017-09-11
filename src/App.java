@@ -2,11 +2,11 @@
 public class App {
 	
 	private static final int TAMANHO_SALA = 12;
-	private static final int QUANTIDADE_LIXEIRAS = 1;
-	private static final int QUANTIDADE_PONTOS_RECARGA = 5;
+	private static final int QUANTIDADE_LIXEIRAS = 5;
+	private static final int QUANTIDADE_PONTOS_RECARGA = 1;
 	
-	private static final int CAPACIDADE_MAXIMA_LIXO = 5;
-	private static final int CARGA_MAXIMA_BATERIA = Integer.MAX_VALUE;
+	private static final int CAPACIDADE_MAXIMA_LIXO = Integer.MAX_VALUE;
+	private static final int CARGA_MAXIMA_BATERIA = 100;
 	
 	public static void main(String[] args) throws Exception {
 		Sala sala = new Sala(TAMANHO_SALA, QUANTIDADE_LIXEIRAS, QUANTIDADE_PONTOS_RECARGA);

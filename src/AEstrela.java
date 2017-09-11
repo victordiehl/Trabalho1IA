@@ -8,7 +8,7 @@ public class AEstrela {
 	Ponto[] solucoesValidas = new Ponto[8];
 	double[] solucoesCusto = new double[8];
 	int quantidadeSolucoes = 0;
-	Deque<Ponto> caminhoPercorrido = new ArrayDeque<Ponto>();
+	public Deque<Ponto> caminhoPercorrido = new ArrayDeque<Ponto>();
 	
 	public void setOrigem(Ponto origem) {
 		this.origem = origem;

@@ -18,6 +18,7 @@ public class Sala {
     private boolean moverParaDireita = true;
     
     private int posicaoParede1, posicaoParede2;
+    AEstrela aes;
     
     public Sala(int tamanhoSala, int quantidadeLixeiras, int quantidadeRecargas){
     	tabelaParaImpressao.put(Tile.LIMPO, " ");
@@ -29,8 +30,8 @@ public class Sala {
     	
         criaSala(tamanhoSala);
         constroiParedes();
-        geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
-        //geraPosicoesParaRecarga(quantidadeRecargas);
+        //geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
+        geraPosicoesParaRecarga(quantidadeRecargas);
         geraPosicoesComLixo();
     }
     
@@ -80,6 +81,18 @@ public class Sala {
     	}
     	return false;
     }
+    
+    public boolean temRecargaComoVizinho(Ponto pos) {
+    	Ponto[] vizinhos = getVizinhos(pos);
+    	for (int i = 0; i < vizinhos.length; i++) {
+    		Ponto v = vizinhos[i];
+    		if (0 <= v.getX() && v.getX() < campo.length &&
+		    	0 <= v.getY() && v.getY() < campo.length &&
+		    	isRecarga(v))
+    			return true;
+    	}
+    	return false;
+    }
 
     private void geraPosicoesParaRecarga(int quantidadePosicoesDeRecarga) {
         Random valor = new Random();
@@ -88,7 +101,7 @@ public class Sala {
             int x = valor.nextInt(campo.length);
             int y = valor.nextInt(campo[0].length);
             if (isPontoValido(new Ponto(x, y)) && isDentroDasAreasParaLixeirasRegargas(y, x)) {
-                Recarga pontoDeRecarga = new Recarga(y, x);
+                Recarga pontoDeRecarga = new Recarga(x, y);
                 recargas[quantidadePosicoesDeRecarga - 1] = pontoDeRecarga;
                 campo[y][x] = Tile.RECARGA;
                 quantidadePosicoesDeRecarga--;
@@ -274,6 +287,8 @@ public class Sala {
     		for (int j = 0; j < campo[0].length; j++) {
     			if (j == posyRobo && i == posxRobo)
     				System.out.print(" R ");
+    			else if (aes != null && aes.caminhoPercorrido.contains(new Ponto(i, j)))
+    				System.out.print(" # ");
     			else
     				System.out.print(" " + tabelaParaImpressao.get(campo[j][i]) + " ");
     		}
