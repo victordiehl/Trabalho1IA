@@ -22,13 +22,18 @@ public class AEstrela {
 		solucoesPossiveis = sala.getVizinhos(origem);
 		
 		quantidadeSolucoes = 0;
-		for (int i = 0; i < solucoesPossiveis.length; i++) {
-			Ponto aux = solucoesPossiveis[i];
-			if (sala.isPontoValido(aux) && !caminhoPercorrido.contains(aux)) {
-				solucoesValidas[quantidadeSolucoes] = solucoesPossiveis[i];
-				solucoesCusto[quantidadeSolucoes] = g() + h(aux);
-				quantidadeSolucoes++;
+		while (quantidadeSolucoes == 0) {
+			for (int i = 0; i < solucoesPossiveis.length; i++) {
+				Ponto aux = solucoesPossiveis[i];
+				if (sala.isPontoValido(aux) && !caminhoPercorrido.contains(aux)) {
+					solucoesValidas[quantidadeSolucoes] = solucoesPossiveis[i];
+					solucoesCusto[quantidadeSolucoes] = g() + h(aux);
+					quantidadeSolucoes++;
+				}
 			}
+			
+			if (quantidadeSolucoes == 0)
+				caminhoPercorrido.clear();
 		}
 		
 		//Todas solucoes validas foram calculadas. Escolheremos aquela que tem menor custo

@@ -47,7 +47,7 @@ public class Automato {
 		System.out.println("Posicao: x=" + getPosicaoAtual().getY() + " y=" + getPosicaoAtual().getX());
 		if (estadoAtual == Estado.CARREGANDO) {
 			//baterias de He-C: carregam em 1s
-			quantidadeBateriaAtual = capacidadeMaximaDeBateria;			
+			quantidadeBateriaAtual = capacidadeMaximaDeBateria;
 			estadoAtual = Estado.ANDANDO;
 			
 			aEstrela.limpaCaminhoPercorrido();
@@ -68,7 +68,8 @@ public class Automato {
 		else if (estadoAtual == Estado.ANDANDO) {
 			System.out.println("Estado: andando");
 			
-			if (quantidadeBateriaAtual <= capacidadeMinimaDeBateria && ultimaPosicaoVisitada == null) {
+			if (quantidadeBateriaAtual <= capacidadeMinimaDeBateria && 
+				ultimaPosicaoVisitada == null && posicaoObjetivo == null) {
 				ultimaPosicaoVisitada = new Ponto(posicaoAtual.getX(), posicaoAtual.getY());
 				posicaoObjetivo = sala.buscaRecargaMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
 			}

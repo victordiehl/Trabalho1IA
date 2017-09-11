@@ -30,7 +30,7 @@ public class Sala {
     	
         criaSala(tamanhoSala);
         constroiParedes();
-        //geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
+        geraPosicoesParaDescarregarLixo(quantidadeLixeiras);
         geraPosicoesParaRecarga(quantidadeRecargas);
         geraPosicoesComLixo();
     }
