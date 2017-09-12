@@ -73,6 +73,10 @@ public class Automato {
 				ultimaPosicaoVisitada = new Ponto(posicaoAtual.getX(), posicaoAtual.getY());
 				posicaoObjetivo = sala.buscaRecargaMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
 			}
+			if (quantidadeLixoAtual == capacidadeMaximaDeLixo) {
+				ultimaPosicaoVisitada = new Ponto(posicaoAtual.getX(), posicaoAtual.getY());
+				posicaoObjetivo = sala.buscaLixeiraMaisProxima(posicaoAtual.getX(), posicaoAtual.getY());
+			}
 			
 			if (sala.isPosicaoAtualSuja(posicaoAtual.getX(), posicaoAtual.getY()) &&
 				quantidadeLixoAtual < capacidadeMaximaDeLixo && 
@@ -91,7 +95,7 @@ public class Automato {
 				
 				//realiza o movimento efetivo com A*
 				if (posicaoObjetivo == null)
-					posicaoObjetivo = sala.proximaPosicaoParaLimpeza(posicaoAtual);
+					posicaoObjetivo = sala.proximaPosicaoParaLimpeza();
 				
 				aEstrela.setOrigem(posicaoAtual);
 				aEstrela.setObjetivo(posicaoObjetivo);

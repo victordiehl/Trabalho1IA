@@ -229,6 +229,7 @@ public class Sala {
     	return recargaEscolhida;
     }
     
+    //movimento zig-zag. Mais rapido, mas esta com problemas para garantir a limpeza Total da sala
     public Ponto proximaPosicaoParaLimpeza(Ponto posAtual) {
     	Ponto aux = posAtual;
     	do {
@@ -247,6 +248,16 @@ public class Sala {
     		}
     	} while(!isPontoValido(aux));
     	return aux;
+    }
+    
+    public Ponto proximaPosicaoParaLimpeza() {
+    	for (int i = 0; i < campo.length; i++) {
+    		for (int j = 0; j < campo[i].length; j++) {
+    			if (campo[j][i] == Tile.LIXO)
+    				return new Ponto(i, j);
+    		}
+    	}
+    	return new Ponto(0, 0);
     }
 
     public boolean isPontoValido(Ponto ponto) {

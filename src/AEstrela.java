@@ -1,5 +1,6 @@
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Random;
 
 public class AEstrela {
 
@@ -21,6 +22,7 @@ public class AEstrela {
 	public Ponto f(Sala sala) {
 		solucoesPossiveis = sala.getVizinhos(origem);
 		
+		boolean preso = false;
 		quantidadeSolucoes = 0;
 		while (quantidadeSolucoes == 0) {
 			for (int i = 0; i < solucoesPossiveis.length; i++) {
@@ -32,8 +34,10 @@ public class AEstrela {
 				}
 			}
 			
-			if (quantidadeSolucoes == 0)
+			if (quantidadeSolucoes == 0) {
 				caminhoPercorrido.clear();
+				preso = true;
+			}
 		}
 		
 		//Todas solucoes validas foram calculadas. Escolheremos aquela que tem menor custo
@@ -44,6 +48,10 @@ public class AEstrela {
 				custoAtual = solucoesCusto[i];
 				solucaoAtual = i;
 			}
+		}
+		if (preso) {
+			Random aleatorio = new Random();
+			solucaoAtual = aleatorio.nextInt(quantidadeSolucoes);
 		}
 		caminhoPercorrido.push(solucoesValidas[solucaoAtual]);
 		return solucoesValidas[solucaoAtual];
