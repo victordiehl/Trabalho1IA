@@ -212,8 +212,10 @@ public class Sala {
     	Lixeira lixeiraEscolhida = null;
     	for (int i = 0; i < lixeiras.length; i++) {
     		int distanciaAtual = Math.abs(lixeiras[i].getX() - x) + Math.abs(lixeiras[i].getY() - y);
-    		if (distanciaAtual < menorDistancia)
+    		if (distanciaAtual < menorDistancia) {
+    			menorDistancia = distanciaAtual;
     			lixeiraEscolhida = lixeiras[i];
+    		}
     	}
     	return lixeiraEscolhida;
     }
@@ -223,8 +225,10 @@ public class Sala {
     	Recarga recargaEscolhida = null;
     	for (int i = 0; i < recargas.length; i++) {
     		int distanciaAtual = Math.abs(recargas[i].getX() - x) + Math.abs(recargas[i].getY() - y);
-    		if (distanciaAtual < menorDistancia)
+    		if (distanciaAtual < menorDistancia) {
+    			menorDistancia = distanciaAtual;
     			recargaEscolhida = recargas[i];
+    		}
     	}
     	return recargaEscolhida;
     }
